@@ -1,108 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concursos de Huapango en Hidalgo</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('Imagenes/fondo_inicio.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-        }
-        header {
-            background: rgba(178, 34, 34, 0.8);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-        section {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 2rem;
-            max-width: 900px;
-            margin: 2rem auto;
-            border-radius: 10px;
-        }
-        h2 {
-            color: #ffffff;
-        }
-        .highlight {
-            background: rgba(255, 228, 181, 0.8);
-            color: #000;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        footer {
-            background: rgba(51, 51, 51, 0.9);
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            margin-top: 2rem;
-        }
-        .btn {
-          display: inline-block;
-          background: #ffd700;
-          color: #000;
-          padding: 0.8rem 1.5rem;
-          text-decoration: none;
-          font-weight: bold;
-          border-radius: 8px;
-          transition: background 0.3s ease;
-       }
-       .btn:hover {
-          background: #ffa500;
-          color: #fff;
-       }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Concursos de Huapango en Hidalgo</title>
+  <style>
+    :root{
+      --accent:#b22222;
+      --accent-strong:#7a1414;
+      --muted: #f5f5f5;
+      --card-bg: rgba(0,0,0,0.55);
+      --highlight-bg: rgba(255,228,181,0.95);
+      --btn-bg: #ffd700;
+      --btn-bg-hover: #ffa500;
+      --radius: 12px;
+      --max-width: 1100px;
+      --gap: 18px;
+    }
+
+    /* Reset & base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background: url('Imagenes/fondo_inicio.jpg') center/cover no-repeat fixed;
+      color: #fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding:24px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    /* Page wrapper */
+    .page{
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+      padding:18px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.36));
+      border-radius:var(--radius);
+      box-shadow:0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    /* Header */
+    header{
+      background: rgba(178,34,34,0.92);
+      color: #fff;
+      text-align:center;
+      padding:28px 18px;
+      border-radius:10px;
+    }
+    header h1{
+      margin:0;
+      font-size: clamp(1.4rem, 2.6vw, 2.5rem);
+      line-height:1.05;
+      letter-spacing:0.6px;
+    }
+    header p{
+      margin-top:8px;
+      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+      opacity:0.95;
+    }
+
+    /* Main content section */
+    section{
+      background: var(--card-bg);
+      padding: clamp(16px, 2.6vw, 32px);
+      border-radius:10px;
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    section h2{
+      color: #fff;
+      font-size: clamp(1.05rem, 2.2vw, 1.6rem);
+      margin-bottom:6px;
+    }
+
+    section p{
+      color: #eee;
+      font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+    }
+
+    .highlight{
+      background: var(--highlight-bg);
+      color: #000;
+      padding:14px;
+      border-radius:8px;
+      margin: 6px 0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+
+    .highlight h2{ color:#111; margin:0 0 6px 0; font-size:1.05rem }
+    .highlight p{ margin:0; color:#222; font-size:0.95rem }
+
+    ul{
+      margin-left:1.1rem;
+      color:#fff;
+      list-style: disc;
+      padding-left: 1rem;
+    }
+    ul li{ margin:6px 0; font-size:0.98rem }
+
+    /* CTA button */
+    .btn{
+      display:inline-block;
+      background:var(--btn-bg);
+      color:#000;
+      padding:0.85rem 1.25rem;
+      text-decoration:none;
+      font-weight:700;
+      border-radius:8px;
+      transition: background .18s ease, transform .08s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover{ background:var(--btn-bg-hover); color:#fff; transform: translateY(-2px); }
+
+    /* Footer */
+    footer{
+      background: rgba(0,0,0,0.6);
+      color:#ddd;
+      text-align:center;
+      padding:12px;
+      border-radius:8px;
+      font-size:0.95rem;
+    }
+
+    /* Layout helpers for larger screens */
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background: rgba(255,255,255,0.04);
+      padding:14px;
+      border-radius:10px;
+      color:#fff;
+    }
+
+    /* Responsive rules */
+    @media (max-width: 980px){
+      .two-col{ grid-template-columns: 1fr 260px; }
+      body{ padding:18px }
+    }
+
+    @media (max-width: 720px){
+      body{ padding:14px; background-attachment: scroll; } /* avoid fixed bg on mobile for performance */
+      .page{ padding:14px }
+      .two-col{ grid-template-columns: 1fr; }
+      header{ padding:20px 12px }
+      .card{ padding:12px }
+      .highlight{ padding:12px }
+      .btn{ width:100%; text-align:center; padding:12px; font-size:1rem }
+    }
+
+    @media (max-width: 420px){
+      header h1{ font-size:1.15rem }
+      header p{ font-size:0.9rem }
+      section{ padding:12px }
+      ul li{ font-size:0.95rem }
+      .highlight h2{ font-size:0.98rem }
+      .btn{ padding:10px; font-size:0.95rem }
+    }
+
+    /* Accessibility & small improvements */
+    .sr-only{
+      position:absolute!important;
+      height:1px;width:1px;
+      overflow:hidden;clip:rect(1px,1px,1px,1px);
+      white-space:nowrap;border:0;padding:0;margin:-1px;
+    }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce){
+      .btn{ transition:none; transform:none; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1> ¡Vive la Pasión del Huapango en Hidalgo! </h1>
-        <p>Tradición, música y cultura que nos une</p>
+  <div class="page" role="main">
+    <header role="banner" aria-label="Encabezado principal">
+      <h1>¡Vive la Pasión del Huapango en Hidalgo!</h1>
+      <p>Tradición, música y cultura que nos une</p>
     </header>
 
     <section>
-        <h2> Tradición que late en cada zapateado</h2>
-        <p>El Huapango es más que un baile: es identidad, orgullo y herencia cultural. 
-        En Hidalgo, los concursos de Huapango reúnen a los mejores bailarines de México.</p>
+      <div class="two-col" aria-label="Contenido principal">
+        <div>
+          <h2>Tradición que late en cada zapateado</h2>
+          <p>El Huapango es más que un baile: es identidad, orgullo y herencia cultural. En Hidalgo, los concursos de Huapango reúnen a los mejores bailarines de México y visitantes que buscan vivir la experiencia.</p>
 
-        <div class="highlight">
-            <h2> ¿Dónde?</h2>
-            <p>Los concursos se realizan en distintos municipios del estado de Hidalgo, 
-            reconocidos por su riqueza cultural y hospitalidad.</p>
-        </div>
+          <div class="highlight" aria-hidden="false">
+            <h2>¿Dónde?</h2>
+            <p>Los concursos se realizan en distintos municipios del estado de Hidalgo, reconocidos por su riqueza cultural y hospitalidad.</p>
+          </div>
 
-        <div class="highlight">
-            <h2> ¿Qué encontrarás?</h2>
+          <div class="highlight" aria-hidden="false">
+            <h2>¿Qué encontrarás?</h2>
             <ul>
-                <li>Competencias de parejas de todas las edades</li>
-                <li>Vestuario típico lleno de color</li>
-                <li>Música en vivo con tríos huastecos</li>
-                <li>Premios y reconocimientos</li>
-                <li>Gastronomía regional y artesanías locales</li>
+              <li>Competencias de parejas de todas las edades</li>
+              <li>Vestuario típico lleno de color</li>
+              <li>Música en vivo con tríos huastecos</li>
+              <li>Premios y reconocimientos</li>
+              <li>Gastronomía regional y artesanías locales</li>
             </ul>
+          </div>
+
+          <h2>¡Ven y sé parte de la fiesta!</h2>
+          <p>Ya sea como participante o espectador, vivirás la fuerza de la tradición huasteca. Consulta el calendario oficial y prepara tu viaje.</p>
+
+          <div style="margin-top:12px;">
+            <a href="Inicio de sesion.html" class="btn" role="button" aria-label="Ver concursos">Ver Concursos</a>
+          </div>
         </div>
 
-        <h2> ¡Ven y sé parte de la fiesta!</h2>
-        <p>Los concursos de Huapango en Hidalgo son una experiencia inolvidable. 
-        Ya sea como participante o espectador, vivirás la fuerza de la tradición huasteca.</p>
+        <aside class="card" aria-label="Próximas fechas y contacto">
+          <h2 style="margin-top:0;color:#fff">Próximas fechas</h2>
+          <p style="color:#eee;margin-bottom:8px">Consulta el calendario oficial de concursos en Hidalgo y prepárate para disfrutar de la magia del Huapango.</p>
 
-        <h2> Próximas fechas</h2>
-        <p>Consulta el calendario oficial de concursos en Hidalgo y prepárate para disfrutar de la magia del Huapango.</p>
-    
-        <a href="Inicio de sesion.html" class="btn">Ver Concursos</a>
+          <div style="margin-top:12px">
+            <strong style="display:block;color:#fff;margin-bottom:6px">Contacto</strong>
+            <p style="color:#ddd;margin:0 0 8px 0">Correo: info@huapango.hgo</p>
+            <p style="color:#ddd;margin:0 0 12px 0">Tel: (771) 000 0000</p>
+            <a class="btn" href="Contacto.html" style="display:inline-block">Contacto</a>
+          </div>
+        </aside>
+      </div>
     </section>
 
-    <footer>
-        <p>© 2026 Concursos de Huapango en Hidalgo | Cultura y Tradición</p>
+    <footer role="contentinfo">
+      <p>© 2026 Concursos de Huapango en Hidalgo | Cultura y Tradición</p>
     </footer>
+  </div>
 </body>
 </html>
