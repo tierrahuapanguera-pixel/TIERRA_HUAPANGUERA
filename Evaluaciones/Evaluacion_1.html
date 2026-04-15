@@ -54,6 +54,12 @@
     .btn-primary{background:var(--primary);color:#fff}
     .btn-ghost{background:#eee}
 
+    .top-actions{
+      display:flex;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
     table{
       width:100%;
       border-collapse:collapse;
@@ -103,6 +109,13 @@
   <!-- TABLAS -->
   <div class="card">
 
+    <!-- 🔘 BOTÓN DOCUMENTOS -->
+    <div class="top-actions">
+      <button class="btn-primary" onclick="window.location.href='../Documentos.html'">
+        📄 Documentos
+      </button>
+    </div>
+
     <h3>Evaluaciones</h3>
     <button onclick="clearEval()" class="btn-ghost">Borrar Evaluaciones</button>
 
@@ -132,7 +145,7 @@
       <tbody id="tablaParejas"></tbody>
     </table>
 
-    <h3> Ranking Top 3 por Categoría</h3>
+    <h3>🏆 Ranking Top 3 por Categoría</h3>
     <table>
       <thead>
         <tr>
@@ -151,7 +164,7 @@
 
 <script>
 const STORAGE_EVAL = "evaluaciones";
-const STORAGE_PAREJAS = "parejas_registradas"; // ✅ corregido
+const STORAGE_PAREJAS = "parejas_registradas";
 
 // GUARDAR
 document.getElementById("form").addEventListener("submit", e=>{
@@ -169,7 +182,7 @@ document.getElementById("form").addEventListener("submit", e=>{
 
   let evals = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
 
-  // 🚫 VALIDACIÓN: evitar duplicados
+  // 🚫 VALIDACIÓN
   let existe = evals.some(e => 
     e.juez.toLowerCase() === juez.toLowerCase() &&
     e.num === num
@@ -186,14 +199,10 @@ document.getElementById("form").addEventListener("submit", e=>{
   evals.push({juez,num,categoria:cat,total,promedio});
   localStorage.setItem(STORAGE_EVAL, JSON.stringify(evals));
 
-  // GUARDAR PAREJA
   let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
 
   if(!parejas.some(p => p.numero === num)){
-    parejas.push({
-      numero: num,
-      categoria: cat || "Sin categoría"
-    });
+    parejas.push({numero:num,categoria:cat});
     localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
   }
 
@@ -208,7 +217,6 @@ function renderAll(){
   renderRanking();
 }
 
-// TABLA EVAL
 function renderEval(){
   let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
   let tabla = document.getElementById("tablaEval");
@@ -227,7 +235,6 @@ function renderEval(){
   });
 }
 
-// TABLA PAREJAS
 function renderParejas(){
   let data = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
   let tabla = document.getElementById("tablaParejas");
@@ -243,7 +250,6 @@ function renderParejas(){
   });
 }
 
-// RANKING
 function renderRanking(){
   const data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
   const tabla = document.getElementById("tablaRanking");
@@ -297,7 +303,6 @@ function renderRanking(){
   });
 }
 
-// BORRAR
 function clearEval(){
   localStorage.removeItem(STORAGE_EVAL);
   renderAll();
@@ -308,7 +313,6 @@ function clearParejas(){
   renderAll();
 }
 
-// INIT
 renderAll();
 </script>
 
