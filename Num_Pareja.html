@@ -5,61 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Número de Pareja</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: url('../Imagenes/tierra5.jpg') no-repeat center center fixed;
+    :root{
+      --bg-img: url('../Imagenes/tierra5.jpg');
+      --card-bg: rgba(255,255,255,0.95);
+      --accent: #e4007f;
+      --accent-dark: #004d00;
+      --muted: #333;
+      --radius: 14px;
+      --gap: 16px;
+      --max-width: 520px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+
+    body{
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background-image: var(--bg-img);
+      background-repeat: no-repeat;
+      background-position: center;
       background-size: cover;
-      color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
     }
-    .card {
-      background: rgba(255,255,255,0.9);
-      padding: 30px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+
+    /* Overlay to improve contrast on busy backgrounds */
+    .backdrop{
+      width:100%;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.28));
     }
-    h1 { color: #004d00; }
-    .numero {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #e4007f;
+
+    .card{
+      width:100%;
+      max-width:var(--max-width);
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:0 12px 36px rgba(0,0,0,0.28);
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:center;
+    }
+
+    h1{
+      color:var(--accent-dark);
+      font-size:1.45rem;
+      margin-bottom:4px;
+    }
+
+    p{ color:#222; font-size:1rem; margin:0; }
+
+    .numero{
+      display:inline-block;
+      background:linear-gradient(90deg, rgba(228,0,127,0.08), rgba(0,77,0,0.04));
+      color:var(--accent);
+      font-size:2.25rem;
+      font-weight:800;
+      padding:14px 22px;
+      border-radius:10px;
+      border:2px dashed rgba(228,0,127,0.12);
+      min-width:140px;
+      text-align:center;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .meta{
+      font-size:0.95rem;
+      color:#444;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      width:100%;
+      justify-content:center;
+      margin-top:6px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      background:var(--accent-dark);
+      color:#fff;
+      border:none;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-width:120px;
+    }
+
+    .btn.secondary{
+      background:transparent;
+      color:var(--accent-dark);
+      border:2px solid rgba(0,77,0,0.12);
+    }
+
+    .note{
+      font-size:0.85rem;
+      color:#666;
+      margin-top:6px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 720px){
+      .card{ padding:20px; }
+      .numero{ font-size:1.9rem; padding:12px 18px; min-width:120px; }
+      h1{ font-size:1.25rem; }
+    }
+
+    @media (max-width: 420px){
+      .card{ padding:16px; border-radius:12px; }
+      .numero{ font-size:1.6rem; padding:10px 14px; min-width:100px; }
+      .btn{ min-width:100px; padding:10px 12px; font-size:0.95rem; }
+    }
+
+    /* Improve readability when prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>¡Registro completado!</h1>
-    <p>El número asignado a tu pareja es:</p>
-    <div class="numero" id="numPareja"></div>
+  <div class="backdrop" role="main">
+    <div class="card" role="region" aria-labelledby="title">
+      <h1 id="title">¡Registro completado!</h1>
+      <p class="meta">El número asignado a tu pareja es:</p>
+
+      <div class="numero" id="numPareja" aria-live="polite">—</div>
+
+      <div class="note" id="noteText"></div>
+
+      <div class="actions" role="group" aria-label="Acciones">
+        <button class="btn" id="verParejas">Ver Parejas</button>
+        <button class="btn secondary" id="nuevaPareja">Registrar otra pareja</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const STORAGE_PAREJAS = "parejas_registradas";
+    (function(){
+      const numEl = document.getElementById('numPareja');
+      const noteEl = document.getElementById('noteText');
 
-    let parejaCount = localStorage.getItem('parejaCount');
+      // Leer el contador de parejas desde localStorage sin incrementarlo aquí.
+      // La página de registro debe haber incrementado y guardado 'parejaCount'.
+      let parejaCount = localStorage.getItem('parejaCount');
 
-    if (!parejaCount) {
-      parejaCount = 1;
-    } else {
-      parejaCount = parseInt(parejaCount) + 1;
-    }
+      if (!parejaCount) {
+        // Si no existe, mostrar mensaje claro y ofrecer opciones
+        numEl.textContent = 'N/A';
+        noteEl.textContent = 'No se encontró un número asignado. Completa el registro para obtener un número de pareja.';
+      } else {
+        // Mostrar el número tal cual está guardado
+        parejaCount = parseInt(parejaCount, 10);
+        numEl.textContent = parejaCount;
+        noteEl.textContent = 'Guarda este número para cualquier consulta o reclamo.';
+      }
 
-    localStorage.setItem('parejaCount', parejaCount);
+      // Botones: ver lista de parejas y registrar otra pareja
+      document.getElementById('verParejas').addEventListener('click', function(){
+        // Redirigir a la página donde se listan las parejas (ajusta la ruta si es necesario)
+        window.location.href = 'evaluaciones.html'; // o la página que muestre parejas
+      });
 
-    document.getElementById('numPareja').textContent = parejaCount;
+      document.getElementById('nuevaPareja').addEventListener('click', function(){
+        // Volver al inicio del registro
+        window.location.href = 'Registro1/registro_participante1.html';
+      });
 
-    // GUARDAR PAREJAS
-    let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
+      // Mejora: permitir copiar número al portapapeles
+      numEl.addEventListener('click', function(){
+        const text = numEl.textContent;
+        if (!text || text === 'N/A') return;
+        navigator.clipboard?.writeText(text).then(()=>{
+          const prev = noteEl.textContent;
+          noteEl.textContent = 'Número copiado al portapapeles.';
+          setTimeout(()=> noteEl.textContent = prev, 1800);
+        }).catch(()=>{/* ignore clipboard errors */});
+      });
 
-    parejas.push({
-      numero: parejaCount
-    });
-
-    localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
+      // Focus para accesibilidad
+      document.getElementById('verParejas').focus();
+    })();
   </script>
 </body>
 </html>
