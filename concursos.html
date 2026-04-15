@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Concursos del Mes - Tierra Huapanguera</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif}
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: url('Imagenes/concurso10.jpg');
+      background-size: cover;      
+      background-position: center; 
+      background-repeat: no-repeat;
+    }
+
+    .franja {
+      width: 100%;
+      background: rgba(255,255,255,0.85);
+      padding: 20px;
+      text-align: center;
+      margin-top: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      position: relative; /* para ubicar el botón dentro */
+    }
+
+    .franja h2 {
+      color: #000000;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .logo {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    /* Botón de administradores */
+    .admin-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ffd700;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s ease;
+    }
+    .admin-btn:hover {
+      background: #ffa500;
+      color: #fff;
+    }
+
+    .carousel {
+      width: 90%;
+      max-width: 900px;
+      height: 1250px;
+      margin-top: 20px;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #bbb;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <!-- Franja blanca -->
+  <div class="franja">
+    <div class="logo">
+      <img src="Imagenes/tierra2.png" alt="Logo Tierra Huapanguera" />
+    </div>
+    <h2>CONCURSOS DEL MES</h2>
+    <button class="admin-btn" onclick="adminAccess()">Solo administradores</button>
+  </div>
+
+  <main>
+    <div class="carousel" id="carousel">
+      <div class="slides" id="slides">
+        <div class="slide"><a href="Registro1/registro_participante1.html"><img src="Imagenes/concurso1.jpg" alt="Concurso 2"></a></div>
+        <div class="slide"><a href="Registro2/registro_participante1.html"><img src="Imagenes/concurso2.jpg" alt="Concurso 3"></a></div>
+        <div class="slide"><a href="Registro3/registro_participante1.html"><img src="Imagenes/concurso3.jpg" alt="Concurso 4"></a></div>
+        <div class="slide"><a href="Registro4/registro_participante1.html"><img src="Imagenes/concurso4.jpg" alt="Concurso 5"></a></div>
+      </div>
+    </div>
+
+    <div class="dots" id="dots">
+      <div class="dot active" data-index="0"></div>
+      <div class="dot" data-index="1"></div>
+      <div class="dot" data-index="2"></div>
+      <div class="dot" data-index="3"></div>
+    </div>
+  </main>
+
+  <script>
+    let currentIndex = 0;
+    const slides = document.getElementById('slides');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = dots.length;
+
+    function updateCarousel() {
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    setInterval(nextSlide, 4000);
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        currentIndex = parseInt(dot.getAttribute('data-index'));
+        updateCarousel();
+      });
+    });
+
+    // Función para acceso de administradores
+    function adminAccess() {
+      const password = prompt("Ingrese la contraseña de administrador:");
+      if (password === "admin123") { // aquí defines tu contraseña
+        window.location.href = "Convocatorias.html"; // redirige a la página de evaluación
+      } else if (password !== null) {
+        alert("Contraseña incorrecta. Acceso denegado.");
+      }
+    }
+  </script>
+</body>
+</html>

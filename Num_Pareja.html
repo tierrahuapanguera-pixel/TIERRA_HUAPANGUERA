@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Número de Pareja</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('../Imagenes/tierra5.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    h1 { color: #004d00; }
+    .numero {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #e4007f;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>¡Registro completado!</h1>
+    <p>El número asignado a tu pareja es:</p>
+    <div class="numero" id="numPareja"></div>
+  </div>
+
+  <script>
+    const STORAGE_PAREJAS = "parejas_registradas";
+
+    let parejaCount = localStorage.getItem('parejaCount');
+
+    if (!parejaCount) {
+      parejaCount = 1;
+    } else {
+      parejaCount = parseInt(parejaCount) + 1;
+    }
+
+    localStorage.setItem('parejaCount', parejaCount);
+
+    document.getElementById('numPareja').textContent = parejaCount;
+
+    // GUARDAR PAREJAS
+    let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
+
+    parejas.push({
+      numero: parejaCount
+    });
+
+    localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
+  </script>
+</body>
+</html>
