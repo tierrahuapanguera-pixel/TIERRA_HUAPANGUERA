@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Documentación - Tierra Huapanguera</title>
+
+  <style>
+    :root{
+      --franja-bg: rgba(255,255,255,0.95);
+      --shadow: 0 8px 24px rgba(0,0,0,0.15);
+      --max-width: 1100px;
+      --gap: 16px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap:var(--gap);
+      background-image: url('Imagenes/tierra11.jpg');
+      background-size: cover;
+      padding:18px;
+    }
+
+    .container {
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+    }
+
+    .franja {
+      background: var(--franja-bg);
+      padding:14px;
+      text-align:center;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      position:relative;
+    }
+
+    .logo {
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+    }
+
+    .logo img {
+      width:48px;
+      height:48px;
+      border-radius:50%;
+    }
+
+    .tabla-box{
+      width:100%;
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      text-align:center;
+    }
+
+    th{
+      background:#004d00;
+      color:white;
+      padding:10px;
+    }
+
+    td{
+      padding:10px;
+      border-bottom:1px solid #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Encabezado -->
+  <div class="franja">
+    <div class="logo">
+      <img src="Imagenes/tierra2.png">
+    </div>
+    <h2>Documentación</h2>
+  </div>
+
+  <!-- Tabla -->
+  <div class="tabla-box">
+    <table id="tablaDocs">
+      <thead>
+        <tr>
+          <th>No. Pareja</th>
+          <th>Participante 1</th>
+          <th>Participante 2</th>
+          <th>Categoría</th>
+          <th>Docs P1</th>
+          <th>Docs P2</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  const tabla = document.querySelector("#tablaDocs tbody");
+
+  const parejas = JSON.parse(localStorage.getItem('parejas_registradas') || '[]');
+
+  if (parejas.length === 0) {
+    tabla.innerHTML = "<tr><td colspan='6'>No hay registros</td></tr>";
+    return;
+  }
+
+  parejas.forEach(p => {
+
+    // ⚠️ Aquí usamos valores generales (porque sessionStorage solo guarda el último)
+    let docs1 = "Documentos cargados ✅";
+    let docs2 = "Documentos cargados ✅";
+
+    const fila = `
+      <tr>
+        <td>${p.numero}</td>
+        <td>${p.nombre1}</td>
+        <td>${p.nombre2}</td>
+        <td>${p.categoria}</td>
+        <td>${docs1}</td>
+        <td>${docs2}</td>
+      </tr>
+    `;
+
+    tabla.innerHTML += fila;
+  });
+
+})();
+</script>
+
+</body>
+</html>
