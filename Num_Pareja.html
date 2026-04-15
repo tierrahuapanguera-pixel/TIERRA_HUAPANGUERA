@@ -32,7 +32,6 @@
       padding:20px;
     }
 
-    /* Overlay to improve contrast on busy backgrounds */
     .backdrop{
       width:100%;
       min-height:100vh;
@@ -121,7 +120,6 @@
       margin-top:6px;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 720px){
       .card{ padding:20px; }
       .numero{ font-size:1.9rem; padding:12px 18px; min-width:120px; }
@@ -134,7 +132,6 @@
       .btn{ min-width:100px; padding:10px 12px; font-size:0.95rem; }
     }
 
-    /* Improve readability when prefers-reduced-motion */
     @media (prefers-reduced-motion: reduce){
       *{ transition:none !important; }
     }
@@ -151,7 +148,9 @@
       <div class="note" id="noteText"></div>
 
       <div class="actions" role="group" aria-label="Acciones">
-        <button class="btn" id="verParejas">Ver Parejas</button>
+        <!--  BOTÓN MODIFICADO -->
+        <button class="btn" id="finalizar">Finalizar</button>
+
         <button class="btn secondary" id="nuevaPareja">Registrar otra pareja</button>
       </div>
     </div>
@@ -162,33 +161,26 @@
       const numEl = document.getElementById('numPareja');
       const noteEl = document.getElementById('noteText');
 
-      // Leer el contador de parejas desde localStorage sin incrementarlo aquí.
-      // La página de registro debe haber incrementado y guardado 'parejaCount'.
       let parejaCount = localStorage.getItem('parejaCount');
 
       if (!parejaCount) {
-        // Si no existe, mostrar mensaje claro y ofrecer opciones
         numEl.textContent = 'N/A';
         noteEl.textContent = 'No se encontró un número asignado. Completa el registro para obtener un número de pareja.';
       } else {
-        // Mostrar el número tal cual está guardado
         parejaCount = parseInt(parejaCount, 10);
         numEl.textContent = parejaCount;
         noteEl.textContent = 'Guarda este número para cualquier consulta o reclamo.';
       }
 
-      // Botones: ver lista de parejas y registrar otra pareja
-      document.getElementById('verParejas').addEventListener('click', function(){
-        // Redirigir a la página donde se listan las parejas (ajusta la ruta si es necesario)
-        window.location.href = 'evaluaciones.html'; // o la página que muestre parejas
+      //  NUEVA FUNCIÓN FINALIZAR
+      document.getElementById('finalizar').addEventListener('click', function(){
+        window.location.href = 'concursos.html';
       });
 
       document.getElementById('nuevaPareja').addEventListener('click', function(){
-        // Volver al inicio del registro
         window.location.href = 'Registro1/registro_participante1.html';
       });
 
-      // Mejora: permitir copiar número al portapapeles
       numEl.addEventListener('click', function(){
         const text = numEl.textContent;
         if (!text || text === 'N/A') return;
@@ -196,11 +188,11 @@
           const prev = noteEl.textContent;
           noteEl.textContent = 'Número copiado al portapapeles.';
           setTimeout(()=> noteEl.textContent = prev, 1800);
-        }).catch(()=>{/* ignore clipboard errors */});
+        }).catch(()=>{});
       });
 
-      // Focus para accesibilidad
-      document.getElementById('verParejas').focus();
+      //  CAMBIAMOS EL FOCUS AL NUEVO BOTÓN
+      document.getElementById('finalizar').focus();
     })();
   </script>
 </body>
