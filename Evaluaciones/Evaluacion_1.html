@@ -7,15 +7,17 @@
 
   <style>
     :root{
-      --card-bg: rgba(255,255,255,0.92);
+      --card-bg: rgba(255,255,255,0.94);
       --accent: #e4007f;
       --primary: #004d00;
       --muted: #555;
       --radius: 10px;
+      --gap: 20px;
     }
 
+    /* Reset y base */
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
-
+    html,body{height:100%}
     body{
       min-height:100vh;
       background:url('../Imagenes/concurso9.jpg') no-repeat center center fixed;
@@ -23,16 +25,21 @@
       padding:24px;
       display:flex;
       justify-content:center;
+      align-items:flex-start;
+      color:#222;
     }
 
+    /* Contenedor principal */
     .container{
       width:100%;
       max-width:1100px;
       display:grid;
       grid-template-columns:1fr 380px;
-      gap:20px;
+      gap:var(--gap);
+      align-items:start;
     }
 
+    /* Tarjetas */
     .card{
       background:var(--card-bg);
       padding:18px;
@@ -40,20 +47,25 @@
       box-shadow:0 6px 20px rgba(0,0,0,0.15);
     }
 
-    h2,h3{color:var(--accent); margin-bottom:10px;}
+    h2,h3{color:var(--accent); margin-bottom:10px; font-weight:700}
+    p{color:var(--muted); margin-bottom:8px}
 
-    input,select{
+    /* Formulario */
+    form{display:flex; flex-direction:column}
+    input,select,button{
       width:100%;
       padding:10px 12px;
       border-radius:8px;
       border:1px solid rgba(0,0,0,0.08);
       margin-bottom:12px;
       font-size:0.95rem;
+      background:#fff;
     }
 
     input:focus, select:focus{
       outline:none;
       border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(228,0,127,0.06);
     }
 
     button{
@@ -72,18 +84,21 @@
     .btn-ghost{
       background:transparent;
       border:1px solid rgba(0,0,0,0.1);
+      color:inherit;
     }
 
+    /* Tablas */
     .table-container{
       width:100%;
       overflow-x:auto;
       margin-top:10px;
+      -webkit-overflow-scrolling:touch;
     }
 
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:800px;
+      min-width:800px; /* para pantallas grandes mantener estructura */
     }
 
     th,td{
@@ -97,10 +112,60 @@
     th{
       color:var(--muted);
       font-weight:700;
+      background:transparent;
     }
 
     tbody tr:hover{
       background:rgba(0,0,0,0.03);
+    }
+
+    /* Pequeños ajustes visuales */
+    #clearEval, #clearParejas{
+      margin-bottom:8px;
+    }
+
+    /* Responsive: tablets / pantallas medianas */
+    @media (max-width: 1000px){
+      .container{
+        grid-template-columns:1fr 320px;
+      }
+      table{min-width:700px}
+    }
+
+    /* Responsive: móviles */
+    @media (max-width: 900px){
+      body{padding:16px}
+      .container{
+        grid-template-columns:1fr; /* apilar en una sola columna */
+      }
+      .card{padding:16px}
+      /* Hacer botones más cómodos en móvil */
+      .btn-primary, .btn-ghost{width:100%}
+      /* Reducir tamaño de tabla y permitir que las celdas hagan wrap */
+      table{min-width:0; font-size:0.9rem}
+      th,td{white-space:normal; padding:8px 6px}
+      /* Separación entre secciones cuando están apiladas */
+      .card + .card{margin-top:8px}
+    }
+
+    /* Opcional: mejorar legibilidad en pantallas muy pequeñas */
+    @media (max-width: 420px){
+      input,select,button{font-size:0.9rem; padding:8px 10px}
+      th,td{font-size:0.85rem; padding:6px}
+      h2,h3{font-size:1.05rem}
+    }
+
+    /* Alternativa: convertir tabla a "cards" en pantallas muy pequeñas (opcional) */
+    @media (max-width: 480px){
+      /* Si prefieres que las filas se muestren como tarjetas en móvil,
+         descomenta el bloque siguiente y ajusta según prefieras. */
+      /*
+      table, thead, tbody, th, td, tr { display:block; }
+      thead { display:none; }
+      tbody tr { margin-bottom:12px; background:#fff; border-radius:8px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
+      tbody td { display:flex; justify-content:space-between; padding:6px 0; border-bottom:none; }
+      tbody td::before { content: attr(data-label); font-weight:700; color:var(--muted); margin-right:8px; }
+      */
     }
   </style>
 </head>
@@ -116,20 +181,20 @@
       <input type="text" id="juez" placeholder="Nombre del jurado" required>
       <input type="text" id="num" placeholder="Número de pareja" required>
 
-      <select id="cat">
+      <select id="cat" required>
         <option value="">Selecciona categoría</option>
         <option>Infantil</option>
         <option>Juvenil</option>
         <option>Adulto</option>
       </select>
 
-      <input type="number" id="v" placeholder="Vestuario (0-10)">
-      <input type="number" id="r" placeholder="Ritmo (0-10)">
-      <input type="number" id="p" placeholder="Precisión (0-10)">
-      <input type="number" id="c" placeholder="Categoría (0-10)">
-      <input type="number" id="pro" placeholder="Proyección (0-10)">
+      <input type="number" id="v" placeholder="Vestuario (0-10)" min="0" max="10" step="0.1" required>
+      <input type="number" id="r" placeholder="Ritmo (0-10)" min="0" max="10" step="0.1" required>
+      <input type="number" id="p" placeholder="Precisión (0-10)" min="0" max="10" step="0.1" required>
+      <input type="number" id="c" placeholder="Categoría (0-10)" min="0" max="10" step="0.1" required>
+      <input type="number" id="pro" placeholder="Proyección (0-10)" min="0" max="10" step="0.1" required>
 
-      <button class="btn-primary">Guardar</button>
+      <button class="btn-primary" type="submit">Guardar</button>
     </form>
   </div>
 
@@ -286,7 +351,15 @@ document.getElementById("form").addEventListener("submit", e=>{
 
   localStorage.setItem(STORAGE_EVAL, JSON.stringify(data));
 
+  // Si quieres guardar parejas por separado (opcional)
+  let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
+  if(!parejas.some(x => x.numero === numPareja)){
+    parejas.push({ numero: numPareja });
+    localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
+  }
+
   renderEval();
+  renderParejas();
 
   e.target.reset();
   document.getElementById("juez").focus();
@@ -294,13 +367,17 @@ document.getElementById("form").addEventListener("submit", e=>{
 
 // BORRAR
 document.getElementById("clearEval").onclick = ()=>{
-  localStorage.removeItem(STORAGE_EVAL);
-  renderEval();
+  if(confirm("¿Borrar todas las evaluaciones?")) {
+    localStorage.removeItem(STORAGE_EVAL);
+    renderEval();
+  }
 };
 
 document.getElementById("clearParejas").onclick = ()=>{
-  localStorage.removeItem(STORAGE_PAREJAS);
-  renderParejas();
+  if(confirm("¿Borrar todas las parejas registradas?")) {
+    localStorage.removeItem(STORAGE_PAREJAS);
+    renderParejas();
+  }
 };
 
 // INIT
