@@ -2,191 +2,368 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Concursos del Mes - Tierra Huapanguera</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif}
+    :root{
+      --franja-bg: rgba(255,255,255,0.92);
+      --accent: #e4007f;
+      --admin: #ffd700;
+      --admin-hover: #ffa500;
+      --card-bg: #ffffff;
+      --shadow: 0 8px 24px rgba(0,0,0,0.15);
+      --radius: 16px;
+      --max-width: 1100px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial, sans-serif}
+    html,body{height:100%}
+
     body {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap:18px;
       background-image: url('Imagenes/concurso10.jpg');
-      background-size: cover;      
-      background-position: center; 
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
+      padding:18px;
     }
 
+    /* Franja superior */
     .franja {
-      width: 100%;
-      background: rgba(255,255,255,0.85);
-      padding: 20px;
-      text-align: center;
-      margin-top: 10px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      position: relative; /* para ubicar el botón dentro */
+      width:100%;
+      max-width:var(--max-width);
+      background: var(--franja-bg);
+      padding:14px 18px;
+      text-align:center;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
     }
 
     .franja h2 {
-      color: #000000;
-      margin: 0;
-      font-size: 1.8rem;
+      color:#000;
+      font-size:1.4rem;
+      line-height:1.1;
+      margin:0;
+      font-weight:800;
     }
 
     .logo {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
 
     .logo img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 8px;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      object-fit:cover;
     }
 
-    /* Botón de administradores */
     .admin-btn {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #ffd700;
-      color: #000;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-      transition: background 0.3s ease;
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-50%);
+      background:var(--admin);
+      color:#000;
+      padding:8px 14px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      border:none;
+      transition:background .18s ease, color .18s ease;
     }
-    .admin-btn:hover {
-      background: #ffa500;
-      color: #fff;
+    .admin-btn:hover{ background:var(--admin-hover); color:#fff; }
+
+    /* Carousel wrapper */
+    .carousel-wrap{
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
     }
 
     .carousel {
-      width: 90%;
-      max-width: 900px;
-      height: 1250px;
-      margin-top: 20px;
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      width:100%;
+      /* Use aspect-ratio to make height responsive */
+      aspect-ratio: 16 / 9;
+      max-height: 900px;
+      border-radius:var(--radius);
+      overflow:hidden;
+      position:relative;
+      background:var(--card-bg);
+      box-shadow:var(--shadow);
     }
 
     .slides {
-      display: flex;
-      transition: transform 0.6s ease;
+      display:flex;
+      height:100%;
+      transition:transform 0.6s cubic-bezier(.22,.9,.32,1);
+      will-change:transform;
     }
 
     .slide {
-      min-width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+      -webkit-user-drag:none;
     }
 
+    .slide a{display:block;width:100%;height:100%}
     .slide img {
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      object-fit: cover;
-      cursor: pointer;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      border-radius:var(--radius);
+      pointer-events:auto;
     }
 
+    /* Dots */
     .dots {
-      display: flex;
-      justify-content: center;
-      margin: 12px 0;
-      gap: 8px;
+      display:flex;
+      gap:8px;
+      justify-content:center;
+      align-items:center;
+      padding:6px;
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #bbb;
-      cursor: pointer;
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:#bbb;
+      cursor:pointer;
+      transition:transform .18s ease, background .18s ease;
+    }
+    .dot.active{ background:#333; transform:scale(1.15); }
+
+    /* Prev/Next buttons (overlay) */
+    .nav-btn {
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      background:rgba(0,0,0,0.45);
+      color:#fff;
+      border:none;
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      z-index:10;
+      transition:background .15s ease;
+    }
+    .nav-btn:hover{ background:rgba(0,0,0,0.6); }
+    .nav-prev{ left:12px; }
+    .nav-next{ right:12px; }
+
+    .nav-btn svg{ width:18px; height:18px; }
+
+    /* Responsive tweaks */
+    @media (max-width: 1100px){
+      .franja h2{ font-size:1.3rem; }
+      .carousel{ aspect-ratio: 16/10; }
     }
 
-    .dot.active {
-      background: #333;
+    @media (max-width: 820px){
+      .franja{ padding:12px; }
+      .logo img{ width:44px; height:44px; }
+      .admin-btn{ padding:7px 12px; right:10px; }
+      .carousel{ aspect-ratio: 4/3; }
+      .franja h2{ font-size:1.15rem; }
+    }
+
+    @media (max-width: 520px){
+      body{ padding:12px; }
+      .franja{ padding:10px; border-radius:10px; }
+      .logo{ left:10px; }
+      .admin-btn{ right:10px; top:50%; transform:translateY(-50%); font-size:0.9rem; padding:6px 10px; }
+      .carousel{ aspect-ratio: 3/4; border-radius:12px; }
+      .dot{ width:10px; height:10px; }
+      .nav-btn{ width:40px; height:40px; }
+    }
+
+    /* Accessibility focus */
+    .admin-btn:focus, .nav-btn:focus, .dot:focus { outline:3px solid rgba(228,0,127,0.18); outline-offset:2px; }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce){
+      .slides{ transition:none; }
     }
   </style>
 </head>
 <body>
-  <!-- Franja blanca -->
-  <div class="franja">
-    <div class="logo">
-      <img src="Imagenes/tierra2.png" alt="Logo Tierra Huapanguera" />
+  <div class="franja" role="banner" aria-label="Encabezado concursos">
+    <div class="logo" aria-hidden="true">
+      <img src="Imagenes/tierra2.png" alt="Logo Tierra Huapanguera">
     </div>
     <h2>CONCURSOS DEL MES</h2>
-    <button class="admin-btn" onclick="adminAccess()">Solo administradores</button>
+    <button class="admin-btn" onclick="adminAccess()" aria-label="Acceso administradores">Solo administradores</button>
   </div>
 
-  <main>
-    <div class="carousel" id="carousel">
-      <div class="slides" id="slides">
-        <div class="slide"><a href="Registro1/registro_participante1.html"><img src="Imagenes/concurso1.jpg" alt="Concurso 2"></a></div>
-        <div class="slide"><a href="Registro2/registro_participante1.html"><img src="Imagenes/concurso2.jpg" alt="Concurso 3"></a></div>
-        <div class="slide"><a href="Registro3/registro_participante1.html"><img src="Imagenes/concurso3.jpg" alt="Concurso 4"></a></div>
-        <div class="slide"><a href="Registro4/registro_participante1.html"><img src="Imagenes/concurso4.jpg" alt="Concurso 5"></a></div>
+  <div class="carousel-wrap" role="main">
+    <div class="carousel" id="carousel" aria-roledescription="carrusel de imágenes">
+      <button class="nav-btn nav-prev" id="prevBtn" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="slides" id="slides" aria-live="polite">
+        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 1">
+          <a href="Registro1/registro_participante1.html" aria-label="Ir a registro concurso 1">
+            <img src="Imagenes/concurso1.jpg" alt="Concurso 1">
+          </a>
+        </div>
+
+        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 2">
+          <a href="Registro2/registro_participante1.html" aria-label="Ir a registro concurso 2">
+            <img src="Imagenes/concurso2.jpg" alt="Concurso 2">
+          </a>
+        </div>
+
+        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 3">
+          <a href="Registro3/registro_participante1.html" aria-label="Ir a registro concurso 3">
+            <img src="Imagenes/concurso3.jpg" alt="Concurso 3">
+          </a>
+        </div>
+
+        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 4">
+          <a href="Registro4/registro_participante1.html" aria-label="Ir a registro concurso 4">
+            <img src="Imagenes/concurso4.jpg" alt="Concurso 4">
+          </a>
+        </div>
       </div>
+
+      <button class="nav-btn nav-next" id="nextBtn" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
 
-    <div class="dots" id="dots">
-      <div class="dot active" data-index="0"></div>
-      <div class="dot" data-index="1"></div>
-      <div class="dot" data-index="2"></div>
-      <div class="dot" data-index="3"></div>
+    <div class="dots" id="dots" role="tablist" aria-label="Navegación de slides">
+      <button class="dot active" data-index="0" aria-label="Slide 1" role="tab" aria-selected="true"></button>
+      <button class="dot" data-index="1" aria-label="Slide 2" role="tab" aria-selected="false"></button>
+      <button class="dot" data-index="2" aria-label="Slide 3" role="tab" aria-selected="false"></button>
+      <button class="dot" data-index="3" aria-label="Slide 4" role="tab" aria-selected="false"></button>
     </div>
-  </main>
+  </div>
 
   <script>
-    let currentIndex = 0;
-    const slides = document.getElementById('slides');
-    const dots = document.querySelectorAll('.dot');
-    const totalSlides = dots.length;
+    (function(){
+      const slidesEl = document.getElementById('slides');
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const carousel = document.getElementById('carousel');
+      const total = dots.length;
+      let current = 0;
+      let intervalId = null;
+      const AUTO_MS = 4000;
+      let isPaused = false;
 
-    function updateCarousel() {
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentIndex);
-      });
-    }
-
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % totalSlides;
-      updateCarousel();
-    }
-
-    setInterval(nextSlide, 4000);
-
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        currentIndex = parseInt(dot.getAttribute('data-index'));
-        updateCarousel();
-      });
-    });
-
-    // Función para acceso de administradores
-    function adminAccess() {
-      const password = prompt("Ingrese la contraseña de administrador:");
-      if (password === "admin123") { // aquí defines tu contraseña
-        window.location.href = "Convocatorias.html"; // redirige a la página de evaluación
-      } else if (password !== null) {
-        alert("Contraseña incorrecta. Acceso denegado.");
+      function goTo(index){
+        current = (index + total) % total;
+        slidesEl.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((d,i)=>{
+          d.classList.toggle('active', i === current);
+          d.setAttribute('aria-selected', i === current ? 'true' : 'false');
+        });
       }
-    }
+
+      function next(){ goTo(current + 1); }
+      function prev(){ goTo(current - 1); }
+
+      // Auto-play
+      function startAuto(){
+        stopAuto();
+        intervalId = setInterval(()=>{ if(!isPaused) next(); }, AUTO_MS);
+      }
+      function stopAuto(){ if(intervalId) clearInterval(intervalId); intervalId = null; }
+
+      // Dots click
+      dots.forEach(dot=>{
+        dot.addEventListener('click', ()=>{ goTo(parseInt(dot.dataset.index,10)); startAuto(); });
+        dot.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dot.click(); }
+        });
+      });
+
+      // Prev/Next
+      nextBtn.addEventListener('click', ()=>{ next(); startAuto(); });
+      prevBtn.addEventListener('click', ()=>{ prev(); startAuto(); });
+
+      // Pause on hover/focus for accessibility
+      carousel.addEventListener('mouseenter', ()=>{ isPaused = true; });
+      carousel.addEventListener('mouseleave', ()=>{ isPaused = false; });
+      carousel.addEventListener('focusin', ()=>{ isPaused = true; });
+      carousel.addEventListener('focusout', ()=>{ isPaused = false; });
+
+      // Touch support (swipe)
+      (function addTouch(){
+        let startX = 0;
+        let deltaX = 0;
+        const threshold = 40;
+
+        slidesEl.addEventListener('touchstart', (e)=>{ startX = e.touches[0].clientX; deltaX = 0; }, {passive:true});
+        slidesEl.addEventListener('touchmove', (e)=>{ deltaX = e.touches[0].clientX - startX; }, {passive:true});
+        slidesEl.addEventListener('touchend', ()=>{
+          if(Math.abs(deltaX) > threshold){
+            if(deltaX < 0) next(); else prev();
+            startAuto();
+          }
+        });
+      })();
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'ArrowRight') { next(); startAuto(); }
+        if(e.key === 'ArrowLeft') { prev(); startAuto(); }
+      });
+
+      // Initialize
+      goTo(0);
+      startAuto();
+
+      // Admin access function
+      window.adminAccess = function(){
+        const password = prompt("Ingrese la contraseña de administrador:");
+        if (password === "admin123") {
+          window.location.href = "Convocatorias.html";
+        } else if (password !== null) {
+          alert("Contraseña incorrecta. Acceso denegado.");
+        }
+      };
+
+      // Improve image loading on slow networks: lazy-load images
+      document.querySelectorAll('.slide img').forEach(img=>{
+        img.loading = 'lazy';
+      });
+
+      // Respect reduced-motion preference: if set, stop auto-play
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        stopAuto();
+      }
+    })();
   </script>
 </body>
 </html>
