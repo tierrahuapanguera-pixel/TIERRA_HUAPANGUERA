@@ -56,18 +56,28 @@
       border-radius:50%;
     }
 
+    /* ✅ CAJA RESPONSIVA */
     .tabla-box{
       width:100%;
       background:white;
       padding:20px;
       border-radius:12px;
       box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
+    /* ✅ CONTENEDOR SCROLL */
+    .table-container{
+      width:100%;
+      overflow-x:auto;
+    }
+
+    /* ✅ TABLA */
     table{
       width:100%;
       border-collapse:collapse;
       text-align:center;
+      min-width:700px; /* clave para responsive */
     }
 
     th{
@@ -80,6 +90,20 @@
       padding:10px;
       border-bottom:1px solid #ccc;
     }
+
+    /* 📱 AJUSTE CELULAR */
+    @media (max-width:600px){
+      th, td{
+        padding:6px;
+        font-size:12px;
+      }
+
+      .logo img{
+        width:36px;
+        height:36px;
+      }
+    }
+
   </style>
 </head>
 
@@ -97,19 +121,21 @@
 
   <!-- Tabla -->
   <div class="tabla-box">
-    <table id="tablaDocs">
-      <thead>
-        <tr>
-          <th>No. Pareja</th>
-          <th>Participante 1</th>
-          <th>Participante 2</th>
-          <th>Categoría</th>
-          <th>Docs P1</th>
-          <th>Docs P2</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="table-container">
+      <table id="tablaDocs">
+        <thead>
+          <tr>
+            <th>No. Pareja</th>
+            <th>Participante 1</th>
+            <th>Participante 2</th>
+            <th>Categoría</th>
+            <th>Docs P1</th>
+            <th>Docs P2</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
 </div>
@@ -128,15 +154,14 @@
 
   parejas.forEach(p => {
 
-    // ⚠️ Aquí usamos valores generales (porque sessionStorage solo guarda el último)
     let docs1 = "Documentos cargados ✅";
     let docs2 = "Documentos cargados ✅";
 
     const fila = `
       <tr>
         <td>${p.numero}</td>
-        <td>${p.nombre1}</td>
-        <td>${p.nombre2}</td>
+        <td>${p.nombre1 || "-"}</td>
+        <td>${p.nombre2 || "-"}</td>
         <td>${p.categoria}</td>
         <td>${docs1}</td>
         <td>${docs2}</td>
