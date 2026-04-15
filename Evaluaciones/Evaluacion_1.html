@@ -15,8 +15,7 @@
       --gap: 20px;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
-    html,body{height:100%}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
     body{
       min-height:100vh;
       background:url('../Imagenes/concurso9.jpg') no-repeat center center fixed;
@@ -24,8 +23,6 @@
       padding:24px;
       display:flex;
       justify-content:center;
-      align-items:flex-start;
-      color:#222;
     }
 
     .container{
@@ -33,79 +30,44 @@
       max-width:1100px;
       display:grid;
       grid-template-columns:1fr 380px;
-      gap:var(--gap);
-      align-items:start;
+      gap:20px;
     }
 
     .card{
       background:var(--card-bg);
       padding:18px;
-      border-radius:var(--radius);
+      border-radius:10px;
       box-shadow:0 6px 20px rgba(0,0,0,0.15);
     }
 
-    h2,h3{color:var(--accent); margin-bottom:10px; font-weight:700}
+    h2,h3{color:var(--accent); margin-bottom:10px}
 
-    form{display:flex; flex-direction:column}
     input,select,button{
       width:100%;
-      padding:10px 12px;
+      padding:10px;
+      margin-bottom:10px;
       border-radius:8px;
-      border:1px solid rgba(0,0,0,0.08);
-      margin-bottom:12px;
-      font-size:0.95rem;
-      background:#fff;
+      border:1px solid #ccc;
     }
 
-    button{
-      padding:10px 14px;
-      border-radius:8px;
-      border:none;
-      cursor:pointer;
-      font-weight:700;
-    }
-
-    .btn-primary{
-      background:var(--primary);
-      color:#fff;
-    }
-
-    .btn-ghost{
-      background:transparent;
-      border:1px solid rgba(0,0,0,0.1);
-      color:inherit;
-    }
-
-    .table-container{
-      width:100%;
-      overflow-x:auto;
-      margin-top:10px;
-    }
+    button{cursor:pointer;font-weight:bold}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-ghost{background:#eee}
 
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:800px;
+      margin-top:10px;
     }
 
     th,td{
-      padding:8px;
-      border-bottom:1px solid rgba(0,0,0,0.06);
-      text-align:left;
-      font-size:0.95rem;
+      padding:6px;
+      border-bottom:1px solid #ddd;
     }
 
-    th{
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      margin-bottom:10px;
-    }
-
+    .gold{background:#fff3b0;}
+    .silver{background:#e0e0e0;}
+    .bronze{background:#f5c6a5;}
   </style>
 </head>
 
@@ -142,51 +104,46 @@
   <div class="card">
 
     <h3>Evaluaciones</h3>
-    <button id="clearEval" class="btn-ghost">Borrar Evaluaciones</button>
+    <button onclick="clearEval()" class="btn-ghost">Borrar Evaluaciones</button>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Pareja</th>
-            <th>Jurado</th>
-            <th>Categoría</th>
-            <th>Vestuario</th>
-            <th>Ritmo</th>
-            <th>Precisión</th>
-            <th>Cat.</th>
-            <th>Proyección</th>
-            <th>Total</th>
-            <th>Promedio</th>
-          </tr>
-        </thead>
-        <tbody id="tablaEval"></tbody>
-      </table>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Pareja</th>
+          <th>Jurado</th>
+          <th>Categoría</th>
+          <th>Total</th>
+          <th>Promedio</th>
+        </tr>
+      </thead>
+      <tbody id="tablaEval"></tbody>
+    </table>
 
-    <h3 style="margin-top:20px;">Parejas Registradas</h3>
-    <button id="clearParejas" class="btn-ghost">Borrar Parejas</button>
+    <h3>Parejas Registradas</h3>
+    <button onclick="clearParejas()" class="btn-ghost">Borrar Parejas</button>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Número</th>
-            <th>Categoría</th>
-          </tr>
-        </thead>
-        <tbody id="tablaParejas"></tbody>
-      </table>
-    </div>
-    <br>
-    <br>
-    
-    <!-- BOTÓN DE DOCUMENTOS -->
-    <div class="top-actions">
-      <button class="btn-primary" onclick="window.location.href='../Documentos.html'">
-        Documentos
-      </button>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Categoría</th>
+        </tr>
+      </thead>
+      <tbody id="tablaParejas"></tbody>
+    </table>
+
+    <h3> Ranking Top 3 por Categoría</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Posición</th>
+          <th>Pareja</th>
+          <th>Promedio</th>
+        </tr>
+      </thead>
+      <tbody id="tablaRanking"></tbody>
+    </table>
 
   </div>
 
@@ -194,49 +151,165 @@
 
 <script>
 const STORAGE_EVAL = "evaluaciones";
-const STORAGE_PAREJAS = "parejas_registradas";
+const STORAGE_PAREJAS = "parejas_registradas"; // ✅ corregido
 
-const tablaEval = document.getElementById("tablaEval");
-const tablaParejas = document.getElementById("tablaParejas");
+// GUARDAR
+document.getElementById("form").addEventListener("submit", e=>{
+  e.preventDefault();
 
+  let juez = document.getElementById("juez").value.trim();
+  let num = document.getElementById("num").value.trim();
+  let cat = document.getElementById("cat").value;
+
+  let v = parseFloat(document.getElementById("v").value);
+  let r = parseFloat(document.getElementById("r").value);
+  let p = parseFloat(document.getElementById("p").value);
+  let c = parseFloat(document.getElementById("c").value);
+  let pro = parseFloat(document.getElementById("pro").value);
+
+  let evals = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
+
+  // 🚫 VALIDACIÓN: evitar duplicados
+  let existe = evals.some(e => 
+    e.juez.toLowerCase() === juez.toLowerCase() &&
+    e.num === num
+  );
+
+  if(existe){
+    alert("⚠️ Este jurado ya calificó a esta pareja");
+    return;
+  }
+
+  let total = v+r+p+c+pro;
+  let promedio = total/5;
+
+  evals.push({juez,num,categoria:cat,total,promedio});
+  localStorage.setItem(STORAGE_EVAL, JSON.stringify(evals));
+
+  // GUARDAR PAREJA
+  let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
+
+  if(!parejas.some(p => p.numero === num)){
+    parejas.push({
+      numero: num,
+      categoria: cat || "Sin categoría"
+    });
+    localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
+  }
+
+  e.target.reset();
+  renderAll();
+});
+
+// RENDER
+function renderAll(){
+  renderEval();
+  renderParejas();
+  renderRanking();
+}
+
+// TABLA EVAL
 function renderEval(){
   let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
-  tablaEval.innerHTML = "";
+  let tabla = document.getElementById("tablaEval");
+  tabla.innerHTML="";
 
   data.forEach(e=>{
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${e.num}</td>
-      <td>${e.juez}</td>
-      <td>${e.categoria}</td>
-      <td>${e.vestuario}</td>
-      <td>${e.ritmo}</td>
-      <td>${e.precision}</td>
-      <td>${e.categoriaScore}</td>
-      <td>${e.proyeccion}</td>
-      <td>${e.total.toFixed(1)}</td>
-      <td>${e.promedio.toFixed(1)}</td>
+    tabla.innerHTML += `
+      <tr>
+        <td>${e.num}</td>
+        <td>${e.juez}</td>
+        <td>${e.categoria}</td>
+        <td>${e.total.toFixed(1)}</td>
+        <td>${e.promedio.toFixed(1)}</td>
+      </tr>
     `;
-    tablaEval.appendChild(tr);
   });
 }
 
+// TABLA PAREJAS
 function renderParejas(){
   let data = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
-  tablaParejas.innerHTML = "";
+  let tabla = document.getElementById("tablaParejas");
+  tabla.innerHTML="";
 
   data.forEach(p=>{
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${p.numero}</td>
-      <td>${p.categoria || "Sin categoría"}</td>
+    tabla.innerHTML += `
+      <tr>
+        <td>${p.numero}</td>
+        <td>${p.categoria}</td>
+      </tr>
     `;
-    tablaParejas.appendChild(tr);
   });
 }
 
-renderEval();
-renderParejas();
+// RANKING
+function renderRanking(){
+  const data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
+  const tabla = document.getElementById("tablaRanking");
+  tabla.innerHTML = "";
+
+  let grupos = {};
+
+  data.forEach(e=>{
+    let key = e.categoria + "_" + e.num;
+
+    if(!grupos[key]){
+      grupos[key] = {categoria:e.categoria,num:e.num,total:0,count:0};
+    }
+
+    grupos[key].total += e.promedio;
+    grupos[key].count++;
+  });
+
+  let resultados = Object.values(grupos).map(g=>({
+    categoria:g.categoria,
+    num:g.num,
+    promedio:g.total/g.count
+  }));
+
+  let porCategoria = {};
+
+  resultados.forEach(r=>{
+    if(!porCategoria[r.categoria]){
+      porCategoria[r.categoria]=[];
+    }
+    porCategoria[r.categoria].push(r);
+  });
+
+  Object.keys(porCategoria).forEach(cat=>{
+    let top = porCategoria[cat]
+      .sort((a,b)=>b.promedio-a.promedio)
+      .slice(0,3);
+
+    top.forEach((t,i)=>{
+      let clase = i===0?"gold":i===1?"silver":"bronze";
+
+      tabla.innerHTML += `
+        <tr class="${clase}">
+          <td>${cat}</td>
+          <td>${i+1}</td>
+          <td>${t.num}</td>
+          <td>${t.promedio.toFixed(2)}</td>
+        </tr>
+      `;
+    });
+  });
+}
+
+// BORRAR
+function clearEval(){
+  localStorage.removeItem(STORAGE_EVAL);
+  renderAll();
+}
+
+function clearParejas(){
+  localStorage.removeItem(STORAGE_PAREJAS);
+  renderAll();
+}
+
+// INIT
+renderAll();
 </script>
 
 </body>
