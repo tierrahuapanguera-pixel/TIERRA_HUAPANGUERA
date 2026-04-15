@@ -6,14 +6,15 @@
   <title>Concursos del Mes - Tierra Huapanguera</title>
   <style>
     :root{
-      --franja-bg: rgba(255,255,255,0.92);
+      --franja-bg: rgba(255,255,255,0.95);
       --accent: #e4007f;
       --admin: #ffd700;
       --admin-hover: #ffa500;
       --card-bg: #ffffff;
       --shadow: 0 8px 24px rgba(0,0,0,0.15);
-      --radius: 16px;
+      --radius: 14px;
       --max-width: 1100px;
+      --gap: 16px;
     }
 
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial, sans-serif}
@@ -24,7 +25,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap:18px;
+      gap:var(--gap);
       background-image: url('Imagenes/concurso10.jpg');
       background-size: cover;
       background-position: center;
@@ -32,10 +33,19 @@
       padding:18px;
     }
 
+    /* Contenedor principal centrado */
+    .container {
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+      align-items:center;
+    }
+
     /* Franja superior */
     .franja {
       width:100%;
-      max-width:var(--max-width);
       background: var(--franja-bg);
       padding:14px 18px;
       text-align:center;
@@ -46,6 +56,7 @@
       align-items:center;
       justify-content:center;
       gap:12px;
+      overflow:visible;
     }
 
     .franja h2 {
@@ -54,6 +65,7 @@
       line-height:1.1;
       margin:0;
       font-weight:800;
+      text-align:center;
     }
 
     .logo {
@@ -71,6 +83,7 @@
       height:48px;
       border-radius:50%;
       object-fit:cover;
+      display:block;
     }
 
     .admin-btn {
@@ -92,18 +105,17 @@
     /* Carousel wrapper */
     .carousel-wrap{
       width:100%;
-      max-width:var(--max-width);
       display:flex;
       flex-direction:column;
       gap:12px;
       align-items:center;
     }
 
+    /* Carousel: use aspect-ratio so height adapts to width */
     .carousel {
       width:100%;
-      /* Use aspect-ratio to make height responsive */
-      aspect-ratio: 16 / 9;
-      max-height: 900px;
+      aspect-ratio: 16 / 9;          /* default landscape */
+      max-height: 720px;             /* limit extreme heights */
       border-radius:var(--radius);
       overflow:hidden;
       position:relative;
@@ -114,8 +126,9 @@
     .slides {
       display:flex;
       height:100%;
-      transition:transform 0.6s cubic-bezier(.22,.9,.32,1);
+      transition:transform 0.5s cubic-bezier(.22,.9,.32,1);
       will-change:transform;
+      touch-action: pan-y;
     }
 
     .slide {
@@ -153,7 +166,8 @@
       border-radius:50%;
       background:#bbb;
       cursor:pointer;
-      transition:transform .18s ease, background .18s ease;
+      transition:transform .15s ease, background .15s ease;
+      border: none;
     }
     .dot.active{ background:#333; transform:scale(1.15); }
 
@@ -176,8 +190,8 @@
       transition:background .15s ease;
     }
     .nav-btn:hover{ background:rgba(0,0,0,0.6); }
-    .nav-prev{ left:12px; }
-    .nav-next{ right:12px; }
+    .nav-prev{ left:10px; }
+    .nav-next{ right:10px; }
 
     .nav-btn svg{ width:18px; height:18px; }
 
@@ -191,80 +205,100 @@
       .franja{ padding:12px; }
       .logo img{ width:44px; height:44px; }
       .admin-btn{ padding:7px 12px; right:10px; }
-      .carousel{ aspect-ratio: 4/3; }
+      .carousel{ aspect-ratio: 4/3; max-height:640px; }
       .franja h2{ font-size:1.15rem; }
     }
 
+    /* Mobile: stack header content, reduce paddings, make carousel taller relative to width */
     @media (max-width: 520px){
       body{ padding:12px; }
-      .franja{ padding:10px; border-radius:10px; }
-      .logo{ left:10px; }
-      .admin-btn{ right:10px; top:50%; transform:translateY(-50%); font-size:0.9rem; padding:6px 10px; }
-      .carousel{ aspect-ratio: 3/4; border-radius:12px; }
+      .franja{
+        padding:10px;
+        border-radius:10px;
+        flex-wrap:wrap;
+        justify-content:center;
+        min-height:64px;
+      }
+      .logo{ position:static; transform:none; order:0; margin-right:8px; }
+      .admin-btn{ position:static; transform:none; order:2; margin-left:auto; }
+      .franja h2{ font-size:1.05rem; order:1; text-align:center; }
+      .carousel{ aspect-ratio: 3 / 4; max-height:900px; border-radius:12px; }
       .dot{ width:10px; height:10px; }
       .nav-btn{ width:40px; height:40px; }
+    }
+
+    /* Very small phones: reduce chrome */
+    @media (max-width: 360px){
+      .franja h2{ font-size:1rem; }
+      .logo img{ width:40px; height:40px; }
+      .admin-btn{ padding:6px 10px; font-size:0.9rem; }
+      .carousel{ aspect-ratio: 2/3; }
     }
 
     /* Accessibility focus */
     .admin-btn:focus, .nav-btn:focus, .dot:focus { outline:3px solid rgba(228,0,127,0.18); outline-offset:2px; }
 
-    /* Reduce motion preference */
+    /* Respect reduced-motion preference */
     @media (prefers-reduced-motion: reduce){
       .slides{ transition:none; }
     }
   </style>
 </head>
 <body>
-  <div class="franja" role="banner" aria-label="Encabezado concursos">
-    <div class="logo" aria-hidden="true">
-      <img src="Imagenes/tierra2.png" alt="Logo Tierra Huapanguera">
-    </div>
-    <h2>CONCURSOS DEL MES</h2>
-    <button class="admin-btn" onclick="adminAccess()" aria-label="Acceso administradores">Solo administradores</button>
-  </div>
-
-  <div class="carousel-wrap" role="main">
-    <div class="carousel" id="carousel" aria-roledescription="carrusel de imágenes">
-      <button class="nav-btn nav-prev" id="prevBtn" aria-label="Anterior">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-
-      <div class="slides" id="slides" aria-live="polite">
-        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 1">
-          <a href="Registro1/registro_participante1.html" aria-label="Ir a registro concurso 1">
-            <img src="Imagenes/concurso1.jpg" alt="Concurso 1">
-          </a>
-        </div>
-
-        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 2">
-          <a href="Registro2/registro_participante1.html" aria-label="Ir a registro concurso 2">
-            <img src="Imagenes/concurso2.jpg" alt="Concurso 2">
-          </a>
-        </div>
-
-        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 3">
-          <a href="Registro3/registro_participante1.html" aria-label="Ir a registro concurso 3">
-            <img src="Imagenes/concurso3.jpg" alt="Concurso 3">
-          </a>
-        </div>
-
-        <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 4">
-          <a href="Registro4/registro_participante1.html" aria-label="Ir a registro concurso 4">
-            <img src="Imagenes/concurso4.jpg" alt="Concurso 4">
-          </a>
-        </div>
+  <div class="container">
+    <div class="franja" role="banner" aria-label="Encabezado concursos">
+      <div class="logo" aria-hidden="true">
+        <img src="Imagenes/tierra2.png" alt="Logo Tierra Huapanguera" />
       </div>
 
-      <button class="nav-btn nav-next" id="nextBtn" aria-label="Siguiente">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <h2>CONCURSOS DEL MES</h2>
+
+      <button class="admin-btn" onclick="adminAccess()" aria-label="Acceso administradores">Solo administradores</button>
     </div>
 
-    <div class="dots" id="dots" role="tablist" aria-label="Navegación de slides">
-      <button class="dot active" data-index="0" aria-label="Slide 1" role="tab" aria-selected="true"></button>
-      <button class="dot" data-index="1" aria-label="Slide 2" role="tab" aria-selected="false"></button>
-      <button class="dot" data-index="2" aria-label="Slide 3" role="tab" aria-selected="false"></button>
-      <button class="dot" data-index="3" aria-label="Slide 4" role="tab" aria-selected="false"></button>
+    <div class="carousel-wrap" role="main">
+      <div class="carousel" id="carousel" aria-roledescription="carrusel de imágenes">
+        <button class="nav-btn nav-prev" id="prevBtn" aria-label="Anterior">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="slides" id="slides" aria-live="polite">
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 1">
+            <a href="Registro1/registro_participante1.html" aria-label="Ir a registro concurso 1">
+              <img src="Imagenes/concurso1.jpg" alt="Concurso 1">
+            </a>
+          </div>
+
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 2">
+            <a href="Registro2/registro_participante1.html" aria-label="Ir a registro concurso 2">
+              <img src="Imagenes/concurso2.jpg" alt="Concurso 2">
+            </a>
+          </div>
+
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 3">
+            <a href="Registro3/registro_participante1.html" aria-label="Ir a registro concurso 3">
+              <img src="Imagenes/concurso3.jpg" alt="Concurso 3">
+            </a>
+          </div>
+
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="Concurso 4">
+            <a href="Registro4/registro_participante1.html" aria-label="Ir a registro concurso 4">
+              <img src="Imagenes/concurso4.jpg" alt="Concurso 4">
+            </a>
+          </div>
+        </div>
+
+        <button class="nav-btn nav-next" id="nextBtn" aria-label="Siguiente">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="dots" id="dots" role="tablist" aria-label="Navegación de slides">
+        <button class="dot active" data-index="0" aria-label="Slide 1" role="tab" aria-selected="true"></button>
+        <button class="dot" data-index="1" aria-label="Slide 2" role="tab" aria-selected="false"></button>
+        <button class="dot" data-index="2" aria-label="Slide 3" role="tab" aria-selected="false"></button>
+        <button class="dot" data-index="3" aria-label="Slide 4" role="tab" aria-selected="false"></button>
+      </div>
     </div>
   </div>
 
@@ -354,7 +388,7 @@
         }
       };
 
-      // Improve image loading on slow networks: lazy-load images
+      // Lazy-load images
       document.querySelectorAll('.slide img').forEach(img=>{
         img.loading = 'lazy';
       });
