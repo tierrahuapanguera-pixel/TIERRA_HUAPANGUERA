@@ -15,7 +15,6 @@
       --gap: 20px;
     }
 
-    /* Reset y base */
     *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
     html,body{height:100%}
     body{
@@ -29,7 +28,6 @@
       color:#222;
     }
 
-    /* Contenedor principal */
     .container{
       width:100%;
       max-width:1100px;
@@ -39,7 +37,6 @@
       align-items:start;
     }
 
-    /* Tarjetas */
     .card{
       background:var(--card-bg);
       padding:18px;
@@ -50,7 +47,6 @@
     h2,h3{color:var(--accent); margin-bottom:10px; font-weight:700}
     p{color:var(--muted); margin-bottom:8px}
 
-    /* Formulario */
     form{display:flex; flex-direction:column}
     input,select,button{
       width:100%;
@@ -87,7 +83,6 @@
       color:inherit;
     }
 
-    /* Tablas */
     .table-container{
       width:100%;
       overflow-x:auto;
@@ -98,7 +93,7 @@
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:800px; /* para pantallas grandes mantener estructura */
+      min-width:800px;
     }
 
     th,td{
@@ -119,12 +114,10 @@
       background:rgba(0,0,0,0.03);
     }
 
-    /* Pequeños ajustes visuales */
     #clearEval, #clearParejas{
       margin-bottom:8px;
     }
 
-    /* Responsive: tablets / pantallas medianas */
     @media (max-width: 1000px){
       .container{
         grid-template-columns:1fr 320px;
@@ -132,40 +125,22 @@
       table{min-width:700px}
     }
 
-    /* Responsive: móviles */
     @media (max-width: 900px){
       body{padding:16px}
       .container{
-        grid-template-columns:1fr; /* apilar en una sola columna */
+        grid-template-columns:1fr;
       }
       .card{padding:16px}
-      /* Hacer botones más cómodos en móvil */
       .btn-primary, .btn-ghost{width:100%}
-      /* Reducir tamaño de tabla y permitir que las celdas hagan wrap */
       table{min-width:0; font-size:0.9rem}
       th,td{white-space:normal; padding:8px 6px}
-      /* Separación entre secciones cuando están apiladas */
       .card + .card{margin-top:8px}
     }
 
-    /* Opcional: mejorar legibilidad en pantallas muy pequeñas */
     @media (max-width: 420px){
       input,select,button{font-size:0.9rem; padding:8px 10px}
       th,td{font-size:0.85rem; padding:6px}
       h2,h3{font-size:1.05rem}
-    }
-
-    /* Alternativa: convertir tabla a "cards" en pantallas muy pequeñas (opcional) */
-    @media (max-width: 480px){
-      /* Si prefieres que las filas se muestren como tarjetas en móvil,
-         descomenta el bloque siguiente y ajusta según prefieras. */
-      /*
-      table, thead, tbody, th, td, tr { display:block; }
-      thead { display:none; }
-      tbody tr { margin-bottom:12px; background:#fff; border-radius:8px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
-      tbody td { display:flex; justify-content:space-between; padding:6px 0; border-bottom:none; }
-      tbody td::before { content: attr(data-label); font-weight:700; color:var(--muted); margin-right:8px; }
-      */
     }
   </style>
 </head>
@@ -173,7 +148,6 @@
 <body>
 <div class="container">
 
-  <!-- FORM -->
   <div class="card">
     <h2>Registrar Evaluaciones</h2>
 
@@ -183,6 +157,7 @@
 
       <select id="cat" required>
         <option value="">Selecciona categoría</option>
+        <option>Pequeños Huapangueritos</option>
         <option>Infantil</option>
         <option>Juvenil</option>
         <option>Adulto</option>
@@ -198,7 +173,6 @@
     </form>
   </div>
 
-  <!-- TABLAS -->
   <div class="card">
 
     <h3>Evaluaciones</h3>
@@ -232,6 +206,7 @@
         <thead>
           <tr>
             <th>Número</th>
+            <th>Categoría</th> 
           </tr>
         </thead>
         <tbody id="tablaParejas"></tbody>
@@ -255,7 +230,6 @@ const p = document.getElementById("p");
 const c = document.getElementById("c");
 const pro = document.getElementById("pro");
 
-// RENDER
 function renderEval(){
   let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
   tablaEval.innerHTML = "";
@@ -288,18 +262,20 @@ function renderParejas(){
   tablaParejas.innerHTML = "";
 
   if(data.length === 0){
-    tablaParejas.innerHTML = "<tr><td>Sin parejas registradas</td></tr>";
+    tablaParejas.innerHTML = "<tr><td colspan='2'>Sin parejas registradas</td></tr>";
     return;
   }
 
   data.forEach(p=>{
     let tr = document.createElement("tr");
-    tr.innerHTML = `<td>${p.numero}</td>`;
+    tr.innerHTML = `
+      <td>${p.numero}</td>
+      <td>${p.categoria || "Sin categoría"}</td>
+    `;
     tablaParejas.appendChild(tr);
   });
 }
 
-// GUARDAR
 document.getElementById("form").addEventListener("submit", e=>{
   e.preventDefault();
 
@@ -322,17 +298,8 @@ document.getElementById("form").addEventListener("submit", e=>{
     return;
   }
 
-  const valores = [vestuario, ritmo, precision, categoriaScore, proyeccion];
-
-  for(let val of valores){
-    if(val < 0 || val > 10){
-      alert("Las calificaciones deben estar entre 0 y 10");
-      return;
-    }
-  }
-
-  const total = valores.reduce((a,b)=>a+b,0);
-  const promedio = total / valores.length;
+  const total = [vestuario, ritmo, precision, categoriaScore, proyeccion].reduce((a,b)=>a+b,0);
+  const promedio = total / 5;
 
   let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
 
@@ -351,10 +318,16 @@ document.getElementById("form").addEventListener("submit", e=>{
 
   localStorage.setItem(STORAGE_EVAL, JSON.stringify(data));
 
-  // Si quieres guardar parejas por separado (opcional)
   let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
+
   if(!parejas.some(x => x.numero === numPareja)){
-    parejas.push({ numero: numPareja });
+    const categoriaSeleccionada = localStorage.getItem("categoria_actual") || "Sin categoría";
+
+    parejas.push({ 
+      numero: numPareja,
+      categoria: categoriaSeleccionada
+    });
+
     localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
   }
 
@@ -365,7 +338,6 @@ document.getElementById("form").addEventListener("submit", e=>{
   document.getElementById("juez").focus();
 });
 
-// BORRAR
 document.getElementById("clearEval").onclick = ()=>{
   if(confirm("¿Borrar todas las evaluaciones?")) {
     localStorage.removeItem(STORAGE_EVAL);
@@ -380,7 +352,6 @@ document.getElementById("clearParejas").onclick = ()=>{
   }
 };
 
-// INIT
 renderEval();
 renderParejas();
 </script>
