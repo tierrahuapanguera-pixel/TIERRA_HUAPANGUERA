@@ -5,184 +5,329 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registro de Participantes - 1</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif}
-    
+    :root{
+      --bg-overlay: rgba(255,255,255,0.92);
+      --accent: #e4007f;
+      --primary: #004d00;
+      --muted: #333;
+      --radius: 12px;
+      --gap: 14px;
+      --max-width: 920px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial, sans-serif}
+    html,body{height:100%}
+
     body{
       min-height:100vh;
       background: url('../Imagenes/tierra5.jpg') no-repeat center center fixed;
       background-size: cover;
-      color:#000;
+      color:var(--muted);
       padding:20px;
       display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .page{
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:var(--gap);
+      padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.55));
+      border-radius:var(--radius);
+      box-shadow:0 10px 30px rgba(0,0,0,0.18);
+      backdrop-filter: blur(4px);
     }
 
     header{
       display:flex;
-      align-items:center;
       gap:12px;
-      margin-bottom:8px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
       background:rgba(255,255,255,0.6);
-      padding:8px;
-      border-radius:8px
     }
-    header img{width:56px;height:56px;border-radius:50%}
-    h2{color:#e4007f;text-align:center;margin:16px 0}
 
-    .form{
-      max-width:680px;
-      margin:0 auto;
-      background:rgba(255,255,255,0.82);
-      padding:20px;
-      border-radius:12px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.25);
-      backdrop-filter: blur(4px);
+    header img{
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      object-fit:cover;
+      flex:0 0 64px;
     }
-    label{display:block;margin:10px 0 6px;font-weight:700}
+
+    header .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    header h1{
+      font-size:1.05rem;
+      color:var(--primary);
+      letter-spacing:0.6px;
+    }
+
+    header .subtitle{
+      font-size:0.9rem;
+      color:var(--muted);
+    }
+
+    main{
+      padding:12px;
+      background:var(--bg-overlay);
+      border-radius:10px;
+    }
+
+    .title{
+      text-align:center;
+      color:var(--accent);
+      margin-bottom:6px;
+      font-weight:800;
+    }
+
+    .subtitle-main{
+      text-align:center;
+      font-size:0.95rem;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+
+    form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      align-items:start;
+      max-width:100%;
+    }
+
+    label{display:block;font-weight:700;margin-bottom:6px;color:var(--muted)}
+    .full{grid-column:1 / -1}
+    .row{display:flex;flex-direction:column;gap:6px}
+
     select,input[type="text"],input[type="file"]{
       width:100%;
       padding:10px;
-      border-radius:6px;
-      border:1px solid rgba(0,0,0,0.12)
-    }
-    .row{margin-bottom:8px}
-    button{
-      display:block;
-      margin:30px auto;
-      padding:10px 20px;
       border-radius:8px;
-      border:none;
-      background:#004d00;
-      color:white;
-      cursor:pointer
+      border:1px solid rgba(0,0,0,0.12);
+      background:#fff;
+      font-size:0.95rem;
     }
-    .small{font-size:0.9rem;color:#000}
 
-    @media (max-width:560px){
-      body{padding:12px}
-      .form{padding:16px}
-      header{gap:10px}
-      h2{font-size:1.1rem}
+    input[type="file"]{
+      padding:8px 10px;
     }
+
+    .hint{font-size:0.85rem;color:#444;margin-top:4px}
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      margin-top:18px;
+      grid-column:1 / -1;
+    }
+
     .btn {
-      display: inline-block;
-      background: #004d00;
-      color: #ffffff;
-      padding: 0.8rem 1.5rem;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      transition: background 0.3s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:var(--primary);
+      color:#fff;
+      padding:10px 18px;
+      border-radius:8px;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
     }
-    .btn:hover {
-          background: #004d00;
-          color: #fff;
+
+    .btn.secondary{
+      background:transparent;
+      color:var(--primary);
+      border:2px solid rgba(0,77,0,0.12);
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 880px){
+      form{grid-template-columns:1fr;}
+      header img{width:56px;height:56px;flex:0 0 56px}
+      .page{padding:14px}
+    }
+
+    @media (max-width: 520px){
+      body{padding:12px}
+      .page{padding:12px}
+      header{gap:10px}
+      .title{font-size:1rem}
+      .subtitle-main{font-size:0.9rem}
+      select,input[type="text"],input[type="file"]{font-size:0.95rem;padding:9px}
+      .btn{padding:10px 14px;font-size:0.95rem}
+    }
+
+    /* Small visual helpers */
+    .required::after{content:" *";color:#c0392b;font-weight:700;margin-left:4px;font-size:0.95rem}
+    .hidden{display:none !important}
   </style>
 </head>
 <body>
-  <header>
-    <img src="../Imagenes/tierra2.png" alt="Logo Tierra Huapanguera" />
-    <div>
-      <h1>TIERRA HUAPANGUERA</h1>
-      <div style="font-size:0.9rem">Registro de Participantes</div>
-    </div>
-  </header>
+  <div class="page" role="main">
+    <header>
+      <img src="../Imagenes/tierra2.png" alt="Logo Tierra Huapanguera" />
+      <div class="brand">
+        <h1>TIERRA HUAPANGUERA</h1>
+        <div class="subtitle">Registro de Participantes</div>
+      </div>
+    </header>
 
-  <main class="form">
-    <h2>REGISTRO DE PARTICIPANTES</h2>
-    <h3>XXIV CONCURSO NACIONAL DE BAILE DE HUAPANGO HUASTECO EN TAMAZUNCHALE</h3>
-    <br>
-    <form id="part1">
-      <label for="categoria">Categoría:</label>
-      <select id="categoria" required>
-        <option value="" disabled selected>Selecciona una categoría</option>
-        <option value="pequeños">Pequeños Huapangueritos</option>
-        <option value="infantil">Infantil</option>
-        <option value="juvenil">Juvenil</option>
-        <option value="adulto">Adulto</option>
-      </select>
-    
-      <label class="small">Estilo:</label>
-      <select id="estilo">
-        <option value="" disabled selected>Selecciona un estilo</option>
-        <option value="hidalguense">Hidalguense</option>
-        <option value="potosino">Potosino</option>
-        <option value="veracruzano">Veracruzano</option>
-        <option value="poblano">Poblano</option>
-        <option value="tamaulipeco">Tamaulipeco</option>
-        <option value="queretano">Queretano</option>
-      </select>
-    
-      <div class="row">
-        <label>Nombre del concursante 1:</label>
-        <input type="text" id="nombre1" placeholder="Nombre completo" required>
-      </div>
-    
-      <div class="row">
-        <label>Acta de nacimiento:</label>
-        <input type="file" id="acta1" accept=".pdf,.jpg,.jpeg,.png" required>
-      </div>
-    
-      <div class="row">
-        <label>CURP:</label>
-        <input type="file" id="curp1" accept=".pdf,.jpg,.jpeg,.png" required>
-      </div>
-    
-      <div class="row">
-        <label>Foto tamaño infantil:</label>
-        <input type="file" id="fotoInf1" accept=".jpg,.jpeg,.png" required>
-      </div>
-    
-      <div class="row" id="ineRow1" style="display:none">
-        <label>INE (sólo adultos):</label>
-        <input type="file" id="ine1" accept=".pdf,.jpg,.jpeg,.png" required>
-      </div>
-    
-      <a href="registro_participante2.html" class="btn">Siguiente</a>
-    </form>
-  </main>
+    <main>
+      <div class="title">REGISTRO DE PARTICIPANTES</div>
+      <div class="subtitle-main">12° CONCURSO NACIONAL DE BAILE DE HUAPANGO EL MARQUÉS</div>
+
+      <form id="part1" novalidate>
+        <div class="row full">
+          <label for="categoria" class="required">Categoría</label>
+          <select id="categoria" required>
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option value="pequeños">Pequeños Huapangueritos</option>
+            <option value="infantil">Infantil</option>
+            <option value="juvenil">Juvenil</option>
+            <option value="adulto">Adulto</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="estilo">Estilo</label>
+          <select id="estilo">
+            <option value="" disabled selected>Selecciona un estilo</option>
+            <option value="hidalguense">Hidalguense</option>
+            <option value="potosino">Potosino</option>
+            <option value="veracruzano">Veracruzano</option>
+            <option value="poblano">Poblano</option>
+            <option value="tamaulipeco">Tamaulipeco</option>
+            <option value="queretano">Queretano</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="nombre1" class="required">Nombre del concursante 1</label>
+          <input type="text" id="nombre1" placeholder="Nombre completo" required>
+        </div>
+
+        <div class="row">
+          <label for="acta1" class="required">Acta de nacimiento</label>
+          <input type="file" id="acta1" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div class="hint">Aceptado: PDF, JPG, PNG</div>
+        </div>
+
+        <div class="row">
+          <label for="curp1" class="required">CURP</label>
+          <input type="file" id="curp1" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+
+        <div class="row">
+          <label for="fotoInf1" class="required">Foto tamaño infantil</label>
+          <input type="file" id="fotoInf1" accept=".jpg,.jpeg,.png" required>
+        </div>
+
+        <div class="row hidden" id="ineRow1">
+          <label for="ine1" class="required">INE (sólo adultos)</label>
+          <input type="file" id="ine1" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+
+        <div class="actions full">
+          <button type="button" id="prevBtn" class="btn secondary">Volver</button>
+          <button type="submit" class="btn" id="nextBtn">Siguiente</button>
+        </div>
+      </form>
+    </main>
+  </div>
 
   <script>
-    const categoriaEl = document.getElementById('categoria');
-    const ineRow1 = document.getElementById('ineRow1');
+    (function(){
+      const categoriaEl = document.getElementById('categoria');
+      const ineRow1 = document.getElementById('ineRow1');
+      const ineInput = document.getElementById('ine1');
+      const form = document.getElementById('part1');
+      const prevBtn = document.getElementById('prevBtn');
 
-    categoriaEl.addEventListener('change', () => {
-      const val = categoriaEl.value;
-      if (val === 'adulto') {
-        ineRow1.style.display = 'block';
-      } else {
-        ineRow1.style.display = 'none';
+      // Mostrar/ocultar INE según categoría
+      function toggleIne(){
+        if (categoriaEl.value === 'adulto') {
+          ineRow1.classList.remove('hidden');
+          ineInput.setAttribute('required','required');
+        } else {
+          ineRow1.classList.add('hidden');
+          ineInput.removeAttribute('required');
+          ineInput.value = "";
+        }
       }
-    });
 
-    document.getElementById('part1').addEventListener('submit', function(e){
-      e.preventDefault();
+      categoriaEl.addEventListener('change', toggleIne);
 
-      const data = {
-        categoria: categoriaEl.value,
-        estilo: document.getElementById('estilo').value,
-        nombre1: document.getElementById('nombre1').value,
-        acta1_selected: !!document.getElementById('acta1').files.length,
-        curp1_selected: !!document.getElementById('curp1').files.length,
-        fotoInf1_selected: !!document.getElementById('fotoInf1').files.length,
-        ine1_selected: !!document.getElementById('ine1').files.length
-      };
-      sessionStorage.setItem('part1', JSON.stringify(data));
-      sessionStorage.setItem('part1_isAdult', data.categoria === 'adulto' ? 'true' : 'false');
-    });
+      // Guardar en sessionStorage y navegar a la siguiente página
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
 
-    const savedPart1 = sessionStorage.getItem('part1');
-    if (savedPart1) {
-      try {
-        const obj = JSON.parse(savedPart1);
-        if (obj.categoria) categoriaEl.value = obj.categoria;
-        if (obj.estilo) document.getElementById('estilo').value = obj.estilo;
-        if (obj.nombre1) document.getElementById('nombre1').value = obj.nombre1;
-        if (categoriaEl.value === 'adulto') ineRow1.style.display = 'block';
-      } catch (err) { /* ignore */ }
-    }
+        // Validación básica HTML5
+        if (!form.checkValidity()) {
+          // Mostrar mensajes nativos de validación
+          form.reportValidity();
+          return;
+        }
+
+        const data = {
+          categoria: categoriaEl.value || "",
+          estilo: document.getElementById('estilo').value || "",
+          nombre1: document.getElementById('nombre1').value.trim() || "",
+          acta1_selected: !!document.getElementById('acta1').files.length,
+          curp1_selected: !!document.getElementById('curp1').files.length,
+          fotoInf1_selected: !!document.getElementById('fotoInf1').files.length,
+          ine1_selected: !!ineInput.files.length
+        };
+
+        // Guardar metadatos en sessionStorage (no se guardan archivos)
+        sessionStorage.setItem('part1', JSON.stringify(data));
+        sessionStorage.setItem('part1_isAdult', data.categoria === 'adulto' ? 'true' : 'false');
+
+        // Redirigir a la siguiente página
+        window.location.href = 'registro_participante2.html';
+      });
+
+      // Prev button: volver a una página anterior si existe
+      prevBtn.addEventListener('click', function(){
+        // Si hay una página anterior en el historial, volver; si no, ir a index
+        if (document.referrer) {
+          history.back();
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+
+      // Restaurar datos guardados (si existen)
+      (function restore(){
+        const saved = sessionStorage.getItem('part1');
+        if (!saved) return;
+        try {
+          const obj = JSON.parse(saved);
+          if (obj.categoria) categoriaEl.value = obj.categoria;
+          if (obj.estilo) document.getElementById('estilo').value = obj.estilo;
+          if (obj.nombre1) document.getElementById('nombre1').value = obj.nombre1;
+          // Mostrar INE si era adulto
+          if (categoriaEl.value === 'adulto') toggleIne();
+        } catch (err) {
+          // ignore parse errors
+        }
+      })();
+
+      // Mejora de accesibilidad: focus en primer campo
+      document.getElementById('nombre1').focus();
+    })();
   </script>
 </body>
 </html>
