@@ -45,7 +45,6 @@
     }
 
     h2,h3{color:var(--accent); margin-bottom:10px; font-weight:700}
-    p{color:var(--muted); margin-bottom:8px}
 
     form{display:flex; flex-direction:column}
     input,select,button{
@@ -56,12 +55,6 @@
       margin-bottom:12px;
       font-size:0.95rem;
       background:#fff;
-    }
-
-    input:focus, select:focus{
-      outline:none;
-      border-color:var(--accent);
-      box-shadow:0 0 0 3px rgba(228,0,127,0.06);
     }
 
     button{
@@ -87,7 +80,6 @@
       width:100%;
       overflow-x:auto;
       margin-top:10px;
-      -webkit-overflow-scrolling:touch;
     }
 
     table{
@@ -101,53 +93,26 @@
       border-bottom:1px solid rgba(0,0,0,0.06);
       text-align:left;
       font-size:0.95rem;
-      white-space:nowrap;
     }
 
     th{
       color:var(--muted);
       font-weight:700;
-      background:transparent;
     }
 
-    tbody tr:hover{
-      background:rgba(0,0,0,0.03);
+    .top-actions{
+      display:flex;
+      gap:10px;
+      margin-bottom:10px;
     }
 
-    #clearEval, #clearParejas{
-      margin-bottom:8px;
-    }
-
-    @media (max-width: 1000px){
-      .container{
-        grid-template-columns:1fr 320px;
-      }
-      table{min-width:700px}
-    }
-
-    @media (max-width: 900px){
-      body{padding:16px}
-      .container{
-        grid-template-columns:1fr;
-      }
-      .card{padding:16px}
-      .btn-primary, .btn-ghost{width:100%}
-      table{min-width:0; font-size:0.9rem}
-      th,td{white-space:normal; padding:8px 6px}
-      .card + .card{margin-top:8px}
-    }
-
-    @media (max-width: 420px){
-      input,select,button{font-size:0.9rem; padding:8px 10px}
-      th,td{font-size:0.85rem; padding:6px}
-      h2,h3{font-size:1.05rem}
-    }
   </style>
 </head>
 
 <body>
 <div class="container">
 
+  <!-- FORM -->
   <div class="card">
     <h2>Registrar Evaluaciones</h2>
 
@@ -163,16 +128,17 @@
         <option>Adulto</option>
       </select>
 
-      <input type="number" id="v" placeholder="Vestuario (0-10)" min="0" max="10" step="0.1" required>
-      <input type="number" id="r" placeholder="Ritmo (0-10)" min="0" max="10" step="0.1" required>
-      <input type="number" id="p" placeholder="Precisión (0-10)" min="0" max="10" step="0.1" required>
-      <input type="number" id="c" placeholder="Categoría (0-10)" min="0" max="10" step="0.1" required>
-      <input type="number" id="pro" placeholder="Proyección (0-10)" min="0" max="10" step="0.1" required>
+      <input type="number" id="v" placeholder="Vestuario" required>
+      <input type="number" id="r" placeholder="Ritmo" required>
+      <input type="number" id="p" placeholder="Precisión" required>
+      <input type="number" id="c" placeholder="Categoría" required>
+      <input type="number" id="pro" placeholder="Proyección" required>
 
       <button class="btn-primary" type="submit">Guardar</button>
     </form>
   </div>
 
+  <!-- TABLAS -->
   <div class="card">
 
     <h3>Evaluaciones</h3>
@@ -206,11 +172,20 @@
         <thead>
           <tr>
             <th>Número</th>
-            <th>Categoría</th> 
+            <th>Categoría</th>
           </tr>
         </thead>
         <tbody id="tablaParejas"></tbody>
       </table>
+    </div>
+    <br>
+    <br>
+    
+    <!-- BOTÓN DE DOCUMENTOS -->
+    <div class="top-actions">
+      <button class="btn-primary" onclick="window.location.href='../Documentos.html'">
+        Documentos
+      </button>
     </div>
 
   </div>
@@ -224,20 +199,9 @@ const STORAGE_PAREJAS = "parejas_registradas";
 const tablaEval = document.getElementById("tablaEval");
 const tablaParejas = document.getElementById("tablaParejas");
 
-const v = document.getElementById("v");
-const r = document.getElementById("r");
-const p = document.getElementById("p");
-const c = document.getElementById("c");
-const pro = document.getElementById("pro");
-
 function renderEval(){
   let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
   tablaEval.innerHTML = "";
-
-  if(data.length === 0){
-    tablaEval.innerHTML = "<tr><td colspan='10'>Sin evaluaciones</td></tr>";
-    return;
-  }
 
   data.forEach(e=>{
     let tr = document.createElement("tr");
@@ -251,7 +215,7 @@ function renderEval(){
       <td>${e.categoriaScore}</td>
       <td>${e.proyeccion}</td>
       <td>${e.total.toFixed(1)}</td>
-      <td>${(e.promedio ?? 0).toFixed(1)}</td>
+      <td>${e.promedio.toFixed(1)}</td>
     `;
     tablaEval.appendChild(tr);
   });
@@ -260,11 +224,6 @@ function renderEval(){
 function renderParejas(){
   let data = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
   tablaParejas.innerHTML = "";
-
-  if(data.length === 0){
-    tablaParejas.innerHTML = "<tr><td colspan='2'>Sin parejas registradas</td></tr>";
-    return;
-  }
 
   data.forEach(p=>{
     let tr = document.createElement("tr");
@@ -275,82 +234,6 @@ function renderParejas(){
     tablaParejas.appendChild(tr);
   });
 }
-
-document.getElementById("form").addEventListener("submit", e=>{
-  e.preventDefault();
-
-  const juez = document.getElementById("juez").value.trim();
-  const numPareja = document.getElementById("num").value.trim();
-
-  const vestuario = parseFloat(v.value);
-  const ritmo = parseFloat(r.value);
-  const precision = parseFloat(p.value);
-  const categoriaScore = parseFloat(c.value);
-  const proyeccion = parseFloat(pro.value);
-
-  if(!juez || !numPareja){
-    alert("Completa nombre del jurado y número de pareja");
-    return;
-  }
-
-  if([vestuario, ritmo, precision, categoriaScore, proyeccion].some(val => isNaN(val))){
-    alert("Debes llenar todas las calificaciones");
-    return;
-  }
-
-  const total = [vestuario, ritmo, precision, categoriaScore, proyeccion].reduce((a,b)=>a+b,0);
-  const promedio = total / 5;
-
-  let data = JSON.parse(localStorage.getItem(STORAGE_EVAL)) || [];
-
-  data.push({
-    num: numPareja,
-    juez,
-    categoria: document.getElementById("cat").value,
-    vestuario,
-    ritmo,
-    precision,
-    categoriaScore,
-    proyeccion,
-    total,
-    promedio
-  });
-
-  localStorage.setItem(STORAGE_EVAL, JSON.stringify(data));
-
-  let parejas = JSON.parse(localStorage.getItem(STORAGE_PAREJAS)) || [];
-
-  if(!parejas.some(x => x.numero === numPareja)){
-    const categoriaSeleccionada = localStorage.getItem("categoria_actual") || "Sin categoría";
-
-    parejas.push({ 
-      numero: numPareja,
-      categoria: categoriaSeleccionada
-    });
-
-    localStorage.setItem(STORAGE_PAREJAS, JSON.stringify(parejas));
-  }
-
-  renderEval();
-  renderParejas();
-
-  e.target.reset();
-  document.getElementById("juez").focus();
-});
-
-document.getElementById("clearEval").onclick = ()=>{
-  if(confirm("¿Borrar todas las evaluaciones?")) {
-    localStorage.removeItem(STORAGE_EVAL);
-    renderEval();
-  }
-};
-
-document.getElementById("clearParejas").onclick = ()=>{
-  if(confirm("¿Borrar todas las parejas registradas?")) {
-    localStorage.removeItem(STORAGE_PAREJAS);
-    renderParejas();
-  }
-};
 
 renderEval();
 renderParejas();
